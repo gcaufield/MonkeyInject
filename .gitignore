@@ -1,3 +1,5 @@
 export/
 bin/
 .DS_Store
+*.barrel
+*.barrel.debug.xml
