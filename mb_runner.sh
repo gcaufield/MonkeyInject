@@ -135,7 +135,8 @@ DEVICES="${MB_HOME}/bin/devices.xml"
 
 function params_for_build
 {
-    PARAMS+="-o \"${PROJECT_HOME}/${APP_NAME}.barrel\" "
+    GIT_VER=$(git describe --long --dirty)
+    PARAMS+="-o \"${PROJECT_HOME}/${APP_NAME}-${GIT_VER}.barrel\" "
     PARAMS+="-w "
 
     JUNGLES=$(printf "%s;" "${JUNGLE_FILES[@]}")
