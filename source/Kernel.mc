@@ -16,7 +16,7 @@ class Kernel {
   }
 
   function load(mod) {
-    mod.getBindings(self, bindings_);
+    mod.getBindings(self.weak(), bindings_);
   }
 
   function build(interface) {

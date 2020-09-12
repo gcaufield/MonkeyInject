@@ -21,7 +21,13 @@ class Factory {
   }
 
   function get(interface) {
-    return resolutionRoot_.build(interface);
+    var resolutionRoot = resolutionRoot_.get();
+    if( resolutionRoot == null ) {
+      // TODO Exception
+      return null;
+    }
+
+    return resolutionRoot.build(interface);
   }
 }
 }

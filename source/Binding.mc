@@ -23,6 +23,12 @@ class Binding {
   function build() {
     var configuredDependencies = {};
     var requiredDependencies = [];
+    var resolutionRoot = resolutionRoot_.get();
+
+    if( resolutionRoot == null ) {
+      // TODO Exception
+      return null;
+    }
 
     // Convention over configuration. Classes built using this framework are
     // expected to provide a "static" function that can be called to retrieve
@@ -32,7 +38,7 @@ class Binding {
     }
 
     for(var dep = 0; dep < requiredDependencies.size(); dep++) {
-      configuredDependencies[requiredDependencies[dep]] = resolutionRoot_.build(
+      configuredDependencies[requiredDependencies[dep]] = resolutionRoot.build(
         requiredDependencies[dep]);
     }
 
