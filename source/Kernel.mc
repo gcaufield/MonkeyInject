@@ -2,8 +2,13 @@
 //
 // Copyright Greg Caufield 2020
 
-class Kernel {
+module MonkeyInject {
 
+//!
+//!
+//!
+(:background)
+class Kernel {
   private var bindings_;
 
   function initialize() {
@@ -22,4 +27,5 @@ class Kernel {
     // Really should throw an exception here.
     return null;
   }
+}
 }

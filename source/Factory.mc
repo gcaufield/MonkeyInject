@@ -8,6 +8,7 @@ module Internal {
 //!
 //!
 //!
+(:background)
 class Factory {
   private var resolutionRoot_;
 

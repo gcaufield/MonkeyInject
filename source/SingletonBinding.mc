@@ -8,6 +8,7 @@ module Internal {
 //!
 //!
 //!
+(:background)
 class SingletonBinding extends Binding {
   private var instance_;
 

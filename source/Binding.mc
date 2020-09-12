@@ -10,6 +10,7 @@ module Internal {
 //!
 //!
 //!
+(:background)
 class Binding {
   private var resolutionRoot_;
   private var classDef_;
@@ -36,10 +37,10 @@ class Binding {
     }
 
     if(requiredDependencies.size() == 0) {
-      return new classDef_();
+      return new self.classDef_();
     }
     else {
-      return new classDef_(configuredDependencies);
+      return new self.classDef_(configuredDependencies);
     }
   }
 }

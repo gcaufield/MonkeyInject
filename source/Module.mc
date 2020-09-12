@@ -1,13 +1,12 @@
 // Module.mc
 //
 // Copyright 2020 Greg Caufield
-
-
 module MonkeyInject {
 
 //!
 //!
 //!
+(:background)
 class Module {
   private var interfaces;
 
@@ -16,7 +15,7 @@ class Module {
   }
 
   function bind(interface) {
-    interfaces[interface] = new BindingSpec(interface);
+    interfaces[interface] = new Internal.BindingSpec(interface);
     return interfaces[interface];
   }
 
@@ -27,12 +26,12 @@ class Module {
     for(var i = 0; i < keys.size(); i++) {
       var spec = interfaces[keys[i]];
 
-      if(spec.getScope() == BindingScopeTransient) {
-        bindings[keys[i]] = new Binding(resolutionRoot, spec);
-      } else if(spec.getScope() == BindingScopeSingleton) {
-        bindings[keys[i]] = new SingletonBinding(resolutionRoot, spec);
-      } else if(spec.getScope() == BindingScopeFactory) {
-        bindings[keys[i]] = new Factory(resolutionRoot);
+      if(spec.getScope() == Internal.BindingScopeTransient) {
+        bindings[keys[i]] = new Internal.Binding(resolutionRoot, spec);
+      } else if(spec.getScope() == Internal.BindingScopeSingleton) {
+        bindings[keys[i]] = new Internal.SingletonBinding(resolutionRoot, spec);
+      } else if(spec.getScope() == Internal.BindingScopeFactory) {
+        bindings[keys[i]] = new Internal.Factory(resolutionRoot);
       }
     }
   }

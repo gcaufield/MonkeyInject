@@ -13,6 +13,7 @@ enum {
 //!
 //!
 //!
+(:background)
 class BindingSpec {
   private var interface_;
   private var classDef_;
