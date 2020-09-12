@@ -95,6 +95,8 @@ if [ "${JUNGLE_FILE_EXISTS}" = false ] ; then
     SOURCES="`cd /; find \"${PROJECT_HOME}/${SOURCE_FOLDER}\" -iname '*.mc' | tr '\n' ' '`"
 fi
 
+OUT_DIR="${PROJECT_HOME}/bin"
+
 # ******************
 # sdk specific stuff
 # ******************
@@ -132,16 +134,32 @@ DEVICES="${MB_HOME}/bin/devices.xml"
 #PARAMS+="--excludes <arg> "
 #PARAMS+="--private-key \"${MB_PRIVATE_KEY}\" "
 #PARAMS+="--rez <arg> "
-
-function params_for_build
+function params_for_package
 {
     GIT_VER=$(git describe --long --dirty)
-    PARAMS+="-o \"${PROJECT_HOME}/${APP_NAME}-${GIT_VER}.barrel\" "
+    PARAMS+="-o \"${OUT_DIR}/${APP_NAME}-${GIT_VER}.barrel\" "
     PARAMS+="-w "
 
     JUNGLES=$(printf "%s;" "${JUNGLE_FILES[@]}")
     JUNGLES=${JUNGLES::-1}
     PARAMS+="-f $JUNGLES"
+}
+
+function params_for_build
+{
+    PARAMS+="-o \"${OUT_DIR}/${APP_NAME}.barrel\" "
+    PARAMS+="-w "
+
+    JUNGLES=$(printf "%s;" "${JUNGLE_FILES[@]}")
+    JUNGLES=${JUNGLES::-1}
+    PARAMS+="-f $JUNGLES"
+}
+
+function prep_out_dir
+{
+if [ ! -d "$OUT_DIR" ]; then
+  mkdir $OUT_DIR
+fi
 }
 
 function barrel
@@ -156,10 +174,7 @@ function tests
 
 function clean
 {
-    rm -f "${PROJECT_HOME}/${APP_NAME}"*.prg*
-    rm -f "${PROJECT_HOME}/${APP_NAME}"*.iq
-    rm -f "${PROJECT_HOME}/${APP_NAME}"*.json
-    rm -f "${PROJECT_HOME}/sys.nfm"
+    rm -rf $OUT_DIR
 }
 
 function simulator
@@ -182,6 +197,12 @@ cd ${PROJECT_HOME}
 case "${1}" in
    build)
         params_for_build
+        prep_out_dir
+        barrel
+        ;;
+   package)
+        params_for_package
+        prep_out_dir
         barrel
         ;;
    test)
