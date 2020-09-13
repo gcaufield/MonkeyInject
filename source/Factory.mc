@@ -23,8 +23,10 @@ class Factory {
   function get(interface) {
     var resolutionRoot = resolutionRoot_.get();
     if( resolutionRoot == null ) {
-      // TODO Exception
-      return null;
+      // The resolution root that we depend on has been deleted.
+      // This is a sign that the Kernel has gone out of scope.
+      throw new InjectionException(
+          "Resolution Root out of scope");
     }
 
     return resolutionRoot.build(interface);

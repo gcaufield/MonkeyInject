@@ -24,8 +24,8 @@ class Kernel {
       return bindings_[interface].build();
     }
 
-    // Really should throw an exception here.
-    return null;
+    throw new InjectionException(
+        "No binding for interface: " + interface);
   }
 }
 }
