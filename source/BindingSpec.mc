@@ -45,8 +45,8 @@ class BindingSpec {
       return classDef_;
     }
 
-    //TODO Throw an exception
-    return null;
+    throw new InjectionException(
+        "Interface not bound to class def");
   }
 
   function getScope() {

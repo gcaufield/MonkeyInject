@@ -16,7 +16,7 @@ class Kernel {
   }
 
   function load(mod) {
-    mod.getBindings(self, bindings_);
+    mod.getBindings(self.weak(), bindings_);
   }
 
   function build(interface) {
@@ -24,8 +24,8 @@ class Kernel {
       return bindings_[interface].build();
     }
 
-    // Really should throw an exception here.
-    return null;
+    throw new InjectionException(
+        "No binding for interface: " + interface);
   }
 }
 }
