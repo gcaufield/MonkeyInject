@@ -27,7 +27,7 @@ class Binding {
     var requiredDependencies = [];
     var resolutionRoot = resolutionRoot_.get();
 
-    if( resolutionRoot == null ) {
+    if(resolutionRoot == null) {
       // The resolution root that we depend on has been deleted.
       // This is a sign that the Kernel has gone out of scope.
       throw new InjectionException(
@@ -45,6 +45,11 @@ class Binding {
     // their dependencies.
     if( classDef_ has :getDependencies) {
       requiredDependencies = classDef_.getDependencies();
+
+      if(!(requiredDependencies instanceof Lang.Array)) {
+        throw new InjectionException("Invalid getDependencies Return Value." +
+                                     " Must be Array type.");
+      }
     }
 
     buildingDependencies_ = true;
