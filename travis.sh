@@ -8,7 +8,7 @@ SDK_URL="$SDK_BASE_URL/$SDK"
 SDK_FILE="sdk.zip"
 SDK_DIR=".Garmin/ConnectIQ/Sdk"
 DEVICE_FILE="devices.zip"
-DEVICE_DIR="${HOME}/.Garmin/ConnectIQ/Devices"
+DEVICE_DIR="${HOME}/.Garmin/ConnectIQ/"
 
 PEM_FILE="/tmp/developer_key.pem"
 DER_FILE="/tmp/developer_key.der"
