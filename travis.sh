@@ -20,7 +20,7 @@ unzip "${SDK_FILE}" "bin/*" -d "${SDK_DIR}"
 
 ## Download devices from google drive
 pip install gdown
-./.local/bin/gdown --id "1nDYmQqfE73wiSQJby5ZW4fkIfYc1ka6V" -O "${DEVICE_FILE}"
+gdown --id "1nDYmQqfE73wiSQJby5ZW4fkIfYc1ka6V" -O "${DEVICE_FILE}"
 mkdir -p "${DEVICE_DIR}"
 unzip "${DEVICE_FILE}" "Devices/*" -d "${DEVICE_DIR}"
 
