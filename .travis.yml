@@ -12,3 +12,6 @@ deploy:
   draft: true
   on:
     tags: true
+after_deploy:
+  - npm install -g github-release-notes
+  - gren release --token ${GH_TOKEN} --tags $(git describe)
