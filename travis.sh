@@ -2,10 +2,10 @@
 # travis.sh script to
 
 SDK_BASE_URL="https://developer.garmin.com/downloads/connect-iq/sdks"
-SDK="connectiq-sdk-lin-3.2.2-2020-08-28-a50584d55.zip"
+SDK="connectiq-sdk-lin-3.2.3-2020-10-13-c14e609bd.zip"
 SDK_URL="$SDK_BASE_URL/$SDK"
 SDK_FILE="sdk.zip"
-SDK_DIR="${HOME}/.Garmin/ConnectIQ/Sdk"
+SDK_DIR="sdk"
 DEVICE_FILE="devices.zip"
 DEVICE_DIR="${HOME}/.Garmin/ConnectIQ/"
 
@@ -17,10 +17,10 @@ DER_FILE="/tmp/developer_key.der"
 wget -O "${SDK_FILE}" "${SDK_URL}"
 mkdir -p "${SDK_DIR}"
 unzip "${SDK_FILE}" "bin/*" -d "${SDK_DIR}"
+unzip "${SDK_FILE}" "share/*" -d "${SDK_DIR}"
 
 ## Download devices from google drive
-pip install gdown
-gdown --id "1nDYmQqfE73wiSQJby5ZW4fkIfYc1ka6V" -O "${DEVICE_FILE}"
+gdown --id "${DEVICE_TOKEN}" -O "${DEVICE_FILE}"
 mkdir -p "${DEVICE_DIR}"
 unzip "${DEVICE_FILE}" "Devices/*" -d "${DEVICE_DIR}"
 
@@ -31,3 +31,10 @@ export MB_HOME="${SDK_DIR}"
 export MB_PRIVATE_KEY="${DER_FILE}"
 
 ./mb_runner.sh package
+
+# Start an XServer and simulator and wait a couple seconds for it to start up
+Xorg -config ./dummy-1920x1080.conf :1 &
+DISPLAY=:1 ./mb_runner.sh simulator
+
+mbget --token ${GH_TOKEN} --config testcfg.ini update
+./mb_runner.sh test
