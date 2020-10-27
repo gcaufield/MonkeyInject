@@ -68,6 +68,7 @@ fi
 # *****************
 
 JUNGLE_FILES=("${PROJECT_HOME}/monkey.jungle")
+TEST_JUNGLE_FILES=("${PROJECT_HOME}/test.jungle" "${PROJECT_HOME}/test_barrels.jungle")
 MANIFEST_FILE="${PROJECT_HOME}/manifest.xml"
 CONFIG_FILE="${PROJECT_HOME}/mb_runner.cfg"
 
@@ -79,21 +80,6 @@ else
 fi
 
 [ -z "${APP_NAME}" ] && { echo "APP_NAME not set!"; exit 1; }
-
-# check if jungle-file(s) exist; if not prepare (re)sources manually ...
-
-JUNGLE_FILE_EXISTS=true
-
-for JUNGLE_FILE in ${JUNGLE_FILES}; do
-    if [ ! -e "${JUNGLE_FILE}" ]; then
-        JUNGLE_FILE_EXISTS=false
-    fi
-done
-
-if [ "${JUNGLE_FILE_EXISTS}" = false ] ; then
-    RESOURCES="`cd /; find \"${PROJECT_HOME}/${RESOURCES_FOLDER}\"* -iname '*.xml' | tr '\n' ':'`"
-    SOURCES="`cd /; find \"${PROJECT_HOME}/${SOURCE_FOLDER}\" -iname '*.mc' | tr '\n' ' '`"
-fi
 
 OUT_DIR="${PROJECT_HOME}/bin"
 
@@ -134,25 +120,42 @@ DEVICES="${MB_HOME}/bin/devices.xml"
 #PARAMS+="--excludes <arg> "
 #PARAMS+="--private-key \"${MB_PRIVATE_KEY}\" "
 #PARAMS+="--rez <arg> "
+function common_params
+{
+  local -n JUNGLES=$1
+  #PARAMS+="--sdk-version \"${TARGET_SDK_VERSION}\" "
+
+  PARAMS+="--apidb \"${API_DB}\" "
+  PARAMS+="--import-dbg \"${API_DEBUG}\" "
+  PARAMS+="--project-info \"${PROJECT_INFO}\" "
+
+  PARAMS+="--warn "
+
+  JUNGLES=$(printf "%s;" "${JUNGLES[@]}")
+  JUNGLES=${JUNGLES::-1}
+  PARAMS+="-f $JUNGLES "
+}
+
 function params_for_package
 {
+    common_params JUNGLE_FILES
     GIT_VER=$(git describe --long --dirty)
     PARAMS+="-o \"${OUT_DIR}/${APP_NAME}-${GIT_VER}.barrel\" "
-    PARAMS+="-w "
-
-    JUNGLES=$(printf "%s;" "${JUNGLE_FILES[@]}")
-    JUNGLES=${JUNGLES::-1}
-    PARAMS+="-f $JUNGLES"
 }
 
 function params_for_build
 {
+    common_params JUNGLE_FILES
     PARAMS+="-o \"${OUT_DIR}/${APP_NAME}.barrel\" "
-    PARAMS+="-w "
+}
 
-    JUNGLES=$(printf "%s;" "${JUNGLE_FILES[@]}")
-    JUNGLES=${JUNGLES::-1}
-    PARAMS+="-f $JUNGLES"
+function params_for_test
+{
+    common_params TEST_JUNGLE_FILES
+    PARAMS+="--unit-test "
+    PARAMS+="-d \"${TARGET_DEVICE}\" "
+    PARAMS+="-o \"${OUT_DIR}/${APP_NAME}.prg\" "
+    PARAMS+="--private-key \"${MB_PRIVATE_KEY}\" "
 }
 
 function prep_out_dir
@@ -167,9 +170,14 @@ function barrel
     "${MB_HOME}/bin/barrelbuild" ${PARAMS}
 }
 
+function build_tests
+{
+    "${MB_HOME}/bin/monkeyc" ${PARAMS}
+}
+
 function tests
 {
-    "${MB_HOME}/bin/monkeydo" "${PROJECT_HOME}/${APP_NAME}.prg" -t
+    "${MB_HOME}/bin/monkeydo" "${OUT_DIR}/${APP_NAME}.prg" "${TARGET_DEVICE}" -t
 }
 
 function clean
@@ -185,29 +193,25 @@ function simulator
     "${MB_HOME}/bin/connectiq" &
 }
 
-function push
-{
-    [ -e "${PROJECT_HOME}/${APP_NAME}.prg" ] && "${MB_HOME}/bin/monkeydo" "${PROJECT_HOME}/${APP_NAME}.prg" "${TARGET_DEVICE}" &
-}
-
 ###
 
 cd ${PROJECT_HOME}
 
 case "${1}" in
    build)
-        params_for_build
         prep_out_dir
+        params_for_build
         barrel
         ;;
    package)
-        params_for_package
         prep_out_dir
+        params_for_package
         barrel
         ;;
    test)
-        params_for_build
-        compile
+        prep_out_dir
+        params_for_test
+        build_tests
         tests
         ;;
    clean)

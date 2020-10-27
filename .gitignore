@@ -4,3 +4,6 @@ out/
 .DS_Store
 *.barrel
 *.barrel.debug.xml
+
+.mbpkg/
+test_barrels.jungle
