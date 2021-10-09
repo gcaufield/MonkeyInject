@@ -20,7 +20,7 @@ class Factory {
     return self;
   }
 
-  function get(interface) {
+  function get(intf) {
     var resolutionRoot = resolutionRoot_.get();
     if( resolutionRoot == null ) {
       // The resolution root that we depend on has been deleted.
@@ -29,7 +29,7 @@ class Factory {
           "Resolution Root out of scope");
     }
 
-    return resolutionRoot.build(interface);
+    return resolutionRoot.build(intf);
   }
 }
 }

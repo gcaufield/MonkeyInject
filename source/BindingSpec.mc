@@ -19,8 +19,8 @@ class BindingSpec {
   private var classDef_;
   private var scope_;
 
-  function initialize(interface) {
-    interface_ = interface;
+  function initialize(intf) {
+    interface_ = intf;
     classDef_ = null;
     scope_ = BindingScopeTransient;
   }

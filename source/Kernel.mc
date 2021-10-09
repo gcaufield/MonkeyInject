@@ -19,13 +19,13 @@ class Kernel {
     mod.getBindings(self.weak(), bindings_);
   }
 
-  function build(interface) {
-    if(bindings_[interface] != null) {
-      return bindings_[interface].build();
+  function build(intf) {
+    if(bindings_[intf] != null) {
+      return bindings_[intf].build();
     }
 
     throw new InjectionException(
-        "No binding for interface: " + interface);
+        "No binding for interface: " + intf);
   }
 }
 }

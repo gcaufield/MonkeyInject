@@ -14,9 +14,9 @@ class Module {
     interfaces = {};
   }
 
-  function bind(interface) {
-    interfaces[interface] = new Internal.BindingSpec(interface);
-    return interfaces[interface];
+  function bind(intf) {
+    interfaces[intf] = new Internal.BindingSpec(intf);
+    return interfaces[intf];
   }
 
   function getBindings(resolutionRoot, bindings) {
