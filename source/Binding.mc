@@ -3,9 +3,17 @@
 //! Copyright Greg Caufield 2020
 
 using Toybox.System;
+import Toybox.Lang;
 
 module MonkeyInject {
 module Internal {
+
+//! This Dummy class is defined so that :getDependencies exists
+class Buildable {
+  static function getDependencies(){
+    return null;
+  }
+}
 
 //!
 //!
@@ -22,7 +30,7 @@ class Binding {
     buildingDependencies_ = false;
   }
 
-  function build() {
+  function build() as Object {
     var configuredDependencies = {};
     var requiredDependencies = [];
     var resolutionRoot = resolutionRoot_.get();
@@ -43,10 +51,10 @@ class Binding {
     // Convention over configuration. Classes built using this framework are
     // expected to provide a "static" function that can be called to retrieve
     // their dependencies.
-    if( classDef_ has :getDependencies) {
+    if( classDef_ has :getDependencies ) {
       requiredDependencies = classDef_.getDependencies();
 
-      if(!(requiredDependencies instanceof Lang.Array)) {
+      if(!(requiredDependencies instanceof Array)) {
         throw new InjectionException("Invalid getDependencies Return Value." +
                                      " Must be Array type.");
       }
